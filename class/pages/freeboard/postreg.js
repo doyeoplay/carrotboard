@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import {useState} from 'react'
+import { gql, useMutation } from '@apollo/client'
+
 import { 
   Address,
   ButtonWrapper,
@@ -23,6 +26,14 @@ import {
   ZipcodeWrapper,
   Error
 } from '../../styles/postReg'
+
+const CREATE_BOARD = gql`
+  mutation createBoard($createBoardInput: CreateBoardInput!){
+    createBoard(createBoardInput: $createBoardInput){
+      _id
+    }
+  }
+`
 
 export default function PostReg(){
   const [writer, setWriter] = useState("");
@@ -62,7 +73,7 @@ export default function PostReg(){
       setContentsError("")
     }
   };
-  const onClickSubmit = () => {
+  const onClickSubmit = async () => {
     if (!writer) {
       setWriterError("작성자를 입력해주세요.");
     }
@@ -76,7 +87,17 @@ export default function PostReg(){
       setContentsError("내용을 입력해주세요.");
     }
     if (writer && password && title && contents) {
-        alert("게시글이 등록되었습니다.");
+      const result = await createBoard({
+        variables: {
+          createBoardInput: {
+            writer: writer,
+            password: password,
+            title: title,
+            contents: contents
+          }
+        }
+      })
+      console.log(result)
     }
   };
 

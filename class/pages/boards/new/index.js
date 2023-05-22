@@ -1,8 +1,4 @@
-import { useState } from 'react'
-import {useState} from 'react'
-import { gql, useMutation } from '@apollo/client'
-
-import { 
+import {
   Address,
   ButtonWrapper,
   Contents,
@@ -25,7 +21,10 @@ import {
   Zipcode,
   ZipcodeWrapper,
   Error
-} from '../../styles/postReg'
+} from "../../../styles/boardsNew";
+
+import {useState} from 'react'
+import { gql, useMutation } from '@apollo/client'
 
 const CREATE_BOARD = gql`
   mutation createBoard($createBoardInput: CreateBoardInput!){
@@ -35,7 +34,7 @@ const CREATE_BOARD = gql`
   }
 `
 
-export default function PostReg(){
+export default function BoardsNewPage() {
   const [writer, setWriter] = useState("");
   const [password, setPassword] = useState("");
   const [title, setTitle] = useState("");
@@ -45,6 +44,8 @@ export default function PostReg(){
   const [passwordError, setPasswordError] = useState("");
   const [titleError, setTitleError] = useState("");
   const [contentsError, setContentsError] = useState("");
+
+  const [createBoard] = useMutation(CREATE_BOARD)
 
   const onChangeWriter = (event) => {
     setWriter(event.target.value);
@@ -73,6 +74,7 @@ export default function PostReg(){
       setContentsError("")
     }
   };
+
   const onClickSubmit = async () => {
     if (!writer) {
       setWriterError("작성자를 입력해주세요.");
@@ -101,29 +103,30 @@ export default function PostReg(){
     }
   };
 
-  return(
+
+  return (
     <Wrapper>
       <Title>게시글 등록</Title>
       <WriterWrapper>
         <InputWrapper>
           <Label>작성자</Label>
-          <Writer type="text" placeholder="이름을 적어주세요." onChange={onChangeWriter}/>
+          <Writer type="text" placeholder="이름을 적어주세요." onChange={onChangeWriter} />
           <Error>{writerError}</Error>
         </InputWrapper>
         <InputWrapper>
           <Label>비밀번호</Label>
-          <Password type="password" placeholder="비밀번호를 작성해주세요." onChange={setPasswordError}/>
+          <Password type="password" placeholder="비밀번호를 작성해주세요." onChange={onChangePassword} />
           <Error>{passwordError}</Error>
         </InputWrapper>
       </WriterWrapper>
       <InputWrapper>
         <Label>제목</Label>
-        <Subject type="text" placeholder="제목을 작성해주세요." onChange={setTitleError}/>
-        <Error>{titleError}</Error>
+        <Subject type="text" placeholder="제목을 작성해주세요." onChange={onChangeTitle} />
+          <Error>{titleError}</Error>
       </InputWrapper>
       <InputWrapper>
         <Label>내용</Label>
-        <Contents placeholder="내용을 작성해주세요." onChange={setContentsError}/>
+        <Contents placeholder="내용을 작성해주세요." onChange={onChangeContents} />
         <Error>{contentsError}</Error>
       </InputWrapper>
       <InputWrapper>
@@ -156,5 +159,5 @@ export default function PostReg(){
         <SubmitButton onClick={onClickSubmit}>등록하기</SubmitButton>
       </ButtonWrapper>
     </Wrapper>
-  )
+  );
 }
